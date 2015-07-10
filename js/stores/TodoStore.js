@@ -5,7 +5,7 @@ var TodoActions = require('../actions/TodoActions')
 window.TodoActions = TodoActions;
 // console.log(TodoActions);
 
-class TodoStore {
+var todoStore = alt.createStore(class TodoStore {
     constructor() {
         this.bindActions(TodoActions)
 
@@ -55,7 +55,7 @@ class TodoStore {
     }
 
     onToggleCompleteAll() {
-        var complete = !TodoStore.areAllComplete()
+        var complete = !todoStore.areAllComplete()
         this.updateAll({ complete })
     }
 
@@ -72,6 +72,7 @@ class TodoStore {
     }
 
     static areAllComplete() {
+        console.log(this);
         var { todos } = this.getState()
         for (var id in todos) {
             if (!todos[id].complete) {
@@ -80,6 +81,7 @@ class TodoStore {
         }
         return true
     }
-}
+});
+module.exports = todoStore
 
-export default alt.createStore(TodoStore)
+// export default alt.createStore(TodoStore)
