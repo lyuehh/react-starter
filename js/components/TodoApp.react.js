@@ -19,7 +19,6 @@ var Header = require('./Header.react');
 var MainSection = require('./MainSection.react');
 var React = require('react');
 var TodoStore = require('../stores/TodoStore');
-var FluxyMixin = require('alt/mixins/FluxyMixin');
 
 /**
     * Retrieve the current TODO data from the TodoStore
@@ -31,23 +30,23 @@ function getTodoState() {
     };
 }
 
-var TodoApp = React.createClass({
-    mixins: [FluxyMixin],
+class TodoApp extends React.Component {
 
-    statics: {
-        storeListeners: {
-            _onChange: TodoStore
-        }
-    },
+    constructor(props) {
+        super(props);
+        this.state = getTodoState();
+        this._onChange = this._onChange.bind(this);
+    }
 
-    getInitialState: function() {
-        return getTodoState();
-    },
+    componentDidMount() {
+        TodoStore.listen(this._onChange);
+    }
 
-    /**
-        * @return {object}
-    */
-    render: function() {
+    componentWillUnMount() {
+        TodoStore.unlisten(this._onChange);
+    }
+
+    render() {
         console.log('render...');
         console.log(this.state.allTodos);
         return (
@@ -59,15 +58,16 @@ var TodoApp = React.createClass({
                 <Footer allTodos={this.state.allTodos} />
             </div>
         );
-    },
+    }
 
     /**
         * Event handler for 'change' events coming from the TodoStore
     */
-    _onChange: function() {
+    _onChange() {
         this.setState(getTodoState());
     }
 
-});
+}
 
-module.exports = TodoApp;
+export default TodoApp
+

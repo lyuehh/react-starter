@@ -55,7 +55,7 @@ class TodoStore {
     }
 
     onToggleCompleteAll() {
-        var complete = !todoStore.areAllComplete()
+        var complete = !TodoStore.areAllComplete()
         this.updateAll({ complete })
     }
 
